@@ -86,6 +86,8 @@ def make_shadow():
     s.configureAutoReconnectBackoffTime(1, 32, 20)
     s.configureConnectDisconnectTimeout(10)  # 10 sec
     s.configureMQTTOperationTimeout(5)  # 5 sec
+    print('Configuring last will message with the following payload ...')
+    s.configureLastWill("my/things/{}/update".format(a.thingName), ShadowPayload.encode(0, 0, 0, 0), 0)
     s.connect()
     return s.createShadowHandlerWithName(a.thingName, True)
 
