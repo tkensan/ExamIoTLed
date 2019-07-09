@@ -1,5 +1,6 @@
 import argparse
 import json
+import time
 
 import tornado.ioloop
 import tornado.web
@@ -18,14 +19,32 @@ class ShadowPayload:
             }}}
         print(d)
         return json.dumps(d)
+    @staticmethod
+    def decode(payload):
+        d = json.loads(payload)
+        print(d)
+        return d['state']['light']
 
 class ExamIoTLedDevice:
-    def __init__(self, shadow):
+    def __init__(self, shadow, ioloop):
+        self._ioloop = ioloop
         self._shadow = shadow
+        self.shadow_delta_reg()
+        print("Waiting for delta callback to be registered ...")
+        time.sleep(10) # wait until delta callback is ready to receive
         self._connected = 1
         self._heartbeat = 1
         self._power = 1
         self._light = 0
+        self.shadow_update()
+    def shadow_delta_reg(self):
+        self._shadow.shadowRegisterDeltaCallback(self.shadow_delta_cb)
+    def shadow_delta_cb(self, payload, status, token):
+        self._ioloop.add_callback(self.shadow_delta, payload, status, token)
+        print("Delta callback added")
+    def shadow_delta(self, payload, status, token):
+        print("Delta callback: power={}".format(self._power))
+        self._light = ShadowPayload.decode(payload)
         self.shadow_update()
     def shadow_update(self):
         d = ShadowPayload.encode(
@@ -65,8 +84,9 @@ def make_webapp(device):
         (r"/", MainHandler, dict(device=device)), ])
 
 if __name__ == "__main__":
+    ioloop = tornado.ioloop.IOLoop.current()
     shadow = make_shadow()
-    device = ExamIoTLedDevice(shadow)
+    device = ExamIoTLedDevice(shadow, ioloop)
     webapp = make_webapp(device)
     webapp.listen(8888)
-    tornado.ioloop.IOLoop.current().start()
+    ioloop.start()
