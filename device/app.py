@@ -2,6 +2,7 @@ import argparse
 import json
 import time
 
+import tornado.escape
 import tornado.ioloop
 import tornado.web
 
@@ -44,14 +45,19 @@ class ExamIoTLedDevice:
         print("Delta callback added")
     def shadow_delta(self, payload, status, token):
         print("Delta callback: power={}".format(self._power))
-        self._light = ShadowPayload.decode(payload)
-        self.shadow_update()
+        if self._power != 0:
+            self._light = ShadowPayload.decode(payload)
+            self.shadow_update()
     def shadow_update(self):
         d = ShadowPayload.encode(
             self._connected, self._power, self._light, self._heartbeat)
         self._shadow.shadowUpdate(d, None, 5)
     def get(self):
         print("Get")
+        self.shadow_update()
+    def put(self, power):
+        print("Put")
+        self._power = power
         self.shadow_update()
 
 class MainHandler(tornado.web.RequestHandler):
@@ -60,6 +66,10 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self._device.get()
         self.write("Hello, Get")
+    def put(self):
+        d = tornado.escape.json_decode(self.request.body)
+        self._device.put(**d)
+        self.write("Hello, Put")
 
 def make_shadow():
     p = argparse.ArgumentParser()
