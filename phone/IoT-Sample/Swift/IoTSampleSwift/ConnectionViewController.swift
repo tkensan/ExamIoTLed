@@ -26,6 +26,7 @@ class ConnectionViewController: UIViewController, UITextViewDelegate {
     @objc var publishViewController : UIViewController!;
     @objc var subscribeViewController : UIViewController!;
     @objc var configurationViewController : UIViewController!;
+    @objc var ledViewController : UIViewController!;
 
     @objc var iotDataManager: AWSIoTDataManager!;
     @objc var iotManager: AWSIoTManager!;
@@ -61,7 +62,7 @@ class ConnectionViewController: UIViewController, UITextViewDelegate {
 
                         self.logTextView.text = "Using certificate:\n\(certificateId!)\n\n\nClient ID:\n\(uuid)"
 
-                        tabBarViewController.viewControllers = [ self, self.publishViewController, self.subscribeViewController ]
+                        tabBarViewController.viewControllers = [ self, self.publishViewController, self.subscribeViewController, self.ledViewController ]
 
                     case .disconnected:
                         tabBarViewController.mqttStatus = "Disconnected"
@@ -224,6 +225,7 @@ class ConnectionViewController: UIViewController, UITextViewDelegate {
         publishViewController = tabBarViewController.viewControllers![1]
         subscribeViewController = tabBarViewController.viewControllers![2]
         configurationViewController = tabBarViewController.viewControllers![3]
+        ledViewController = tabBarViewController.viewControllers![4]
 
         tabBarViewController.viewControllers = [ self, configurationViewController ]
         logTextView.resignFirstResponder()

@@ -19,6 +19,7 @@
 		A6B39BC11BF3A93600045F73 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A6B39BBF1BF3A93600045F73 /* LaunchScreen.storyboard */; };
 		A6CC2A291BFFCB6F00635393 /* IoTSampleTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC2A281BFFCB6F00635393 /* IoTSampleTabBarController.swift */; };
 		A6E263221C06870D0032B28D /* ConfigurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E263211C06870D0032B28D /* ConfigurationViewController.swift */; };
+		C4E3EBB022CDAB31001C7878 /* LedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E3EBAF22CDAB31001C7878 /* LedViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		A6B39BC21BF3A93600045F73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = IoTSampleSwift/Info.plist; sourceTree = "<group>"; };
 		A6CC2A281BFFCB6F00635393 /* IoTSampleTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IoTSampleTabBarController.swift; sourceTree = "<group>"; };
 		A6E263211C06870D0032B28D /* ConfigurationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigurationViewController.swift; sourceTree = "<group>"; };
+		C4E3EBAF22CDAB31001C7878 /* LedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 				A6B39BBD1BF3A93600045F73 /* Assets.xcassets */,
 				A6B39BBF1BF3A93600045F73 /* LaunchScreen.storyboard */,
 				A62CEE591BF3AEA500E9C895 /* Supporting Files */,
+				C4E3EBAF22CDAB31001C7878 /* LedViewController.swift */,
 			);
 			path = IoTSampleSwift;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 				A6B39BB51BF3A93600045F73 /* AppDelegate.swift in Sources */,
 				A6E263221C06870D0032B28D /* ConfigurationViewController.swift in Sources */,
 				A6CC2A291BFFCB6F00635393 /* IoTSampleTabBarController.swift in Sources */,
+				C4E3EBB022CDAB31001C7878 /* LedViewController.swift in Sources */,
 				A6B39BB71BF3A93600045F73 /* ConnectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
