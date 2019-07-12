@@ -36,6 +36,9 @@ class TestLambdaHandler(unittest.TestCase):
         return c
 
     def test_health_ng(self, mock):
+        """
+        Test health check NG case
+        """
         mock.configure_mock(**(self.config_payload(1, 0)))
         d = lf.lambda_handler(**(self.lambdaparam))
         self.assertEqual(d, 1)
@@ -44,12 +47,18 @@ class TestLambdaHandler(unittest.TestCase):
             payload=lf.payload_put(lf.shadow_update_data))
 
     def test_health_ok(self, mock):
+        """
+        Test health check OK case
+        """
         mock.configure_mock(**(self.config_payload(1, 1)))
         d = lf.lambda_handler(**(self.lambdaparam))
         self.assertEqual(d, 0)
         mock.client.return_value.update_thing_shadow.assert_not_called()
 
     def test_timestamp_backward(self, mock):
+        """
+        Test illegal timestamps where last update is newer than now
+        """
         mock.configure_mock(**(self.config_payload(0, 1)))
         self.assertRaises(
             AssertionError,
@@ -89,6 +98,9 @@ class TestLambdaHandler(unittest.TestCase):
         mock.client.return_value.update_thing_shadow.assert_not_called()
 
     def test_limit_minus(self, mock):
+        """
+        Test limit value of minus
+        """
         mock.configure_mock(**(self.config_payload(1, 1)))
         d = lf.lambda_handler(event=self.lambdaevent_minus, context=None)
         self.assertEqual(d, 0)
@@ -97,6 +109,9 @@ class TestLambdaHandler(unittest.TestCase):
             payload=lf.payload_put(lf.shadow_update_data))
 
     def test_limit_noint(self, mock):
+        """
+        Test limit value of non integer
+        """
         mock.configure_mock(**(self.config_payload(1, 0)))
         self.assertRaises(
             TypeError,
