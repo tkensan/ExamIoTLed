@@ -1,4 +1,5 @@
 import json
+import numbers
 
 import boto3
 
@@ -25,10 +26,17 @@ def payload_get(response):
 def payload_put(dct):
     return json.dumps(dct)
 
+def validate_limit(limit):
+    if not isinstance(limit, numbers.Integral):
+        raise TypeError
+    elif isinstance(limit, bool):
+        raise TypeError
+
 def lambda_handler(event, context):
     name = event['thingname']
     limit = event['limit']
     print('thing: {}, limit: {}'.format(name, limit))
+    validate_limit(limit)
     iot = boto3.client('iot-data')
     r = iot.get_thing_shadow(thingName=name)
     p = payload_get(r)
