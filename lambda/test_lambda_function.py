@@ -9,8 +9,13 @@ import lambda_function as lf
 class TestLambdaHandler(unittest.TestCase):
 
     thingname = 'testthing'
-    lambdaevent = {'thingname': thingname, 'limit': 0}
-    lambdaevent_nokey = {'limit': 0}
+    limit = 0
+    limit_minus = -1
+    limit_noint = False
+    lambdaevent = {'thingname': thingname, 'limit': limit}
+    lambdaevent_nokey = {'limit': limit}
+    lambdaevent_minus = {'thingname': thingname, 'limit': limit_minus}
+    lambdaevent_noint = {'thingname': thingname, 'limit': limit_noint}
     lambdaparam = {'event': lambdaevent, 'context': None}
 
     def config_payload(self, now, last):
@@ -81,6 +86,21 @@ class TestLambdaHandler(unittest.TestCase):
         self.assertRaises(
             KeyError,
             lf.lambda_handler, event=self.lambdaevent_nokey, context=None)
+        mock.client.return_value.update_thing_shadow.assert_not_called()
+
+    def test_limit_minus(self, mock):
+        mock.configure_mock(**(self.config_payload(1, 1)))
+        d = lf.lambda_handler(event=self.lambdaevent_minus, context=None)
+        self.assertEqual(d, 0)
+        mock.client.return_value.update_thing_shadow.assert_called_once_with(
+            thingName=self.thingname,
+            payload=lf.payload_put(lf.shadow_update_data))
+
+    def test_limit_noint(self, mock):
+        mock.configure_mock(**(self.config_payload(1, 0)))
+        self.assertRaises(
+            TypeError,
+            lf.lambda_handler, event=self.lambdaevent_noint, context=None)
         mock.client.return_value.update_thing_shadow.assert_not_called()
 
 if __name__ == '__main__':
