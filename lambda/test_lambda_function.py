@@ -65,6 +65,26 @@ class TestLambdaHandler(unittest.TestCase):
             lf.lambda_handler, event=self.lambdaevent, context=None)
         mock.client.return_value.update_thing_shadow.assert_not_called()
 
+    def test_timestamp_minus(self, mock):
+        """
+        Test timestamps of minus value
+        """
+        mock.configure_mock(**(self.config_payload(-1, -2)))
+        self.assertRaises(
+            AssertionError,
+            lf.lambda_handler, event=self.lambdaevent, context=None)
+        mock.client.return_value.update_thing_shadow.assert_not_called()
+
+    def test_timestamp_noint(self, mock):
+        """
+        Test timestamps of non integer value
+        """
+        mock.configure_mock(**(self.config_payload(True, False)))
+        self.assertRaises(
+            TypeError,
+            lf.lambda_handler, event=self.lambdaevent, context=None)
+        mock.client.return_value.update_thing_shadow.assert_not_called()
+
     def test_thingname_nothing(self, mock):
         """
         Test non existing thing name specified.
