@@ -44,20 +44,25 @@ class ExamIoTLedDevice:
         self._ioloop.add_callback(self.shadow_delta, payload, status, token)
         print("Delta callback added")
     def shadow_delta(self, payload, status, token):
-        print("Delta callback: power={}".format(self._power))
+        print("Delta callback power={}".format(self._power))
         if self._power != 0:
             self._light = ShadowPayload.decode(payload)
             self.shadow_update()
     def shadow_update(self):
+        print("Update heartbeat={}".format(self._heartbeat))
         d = ShadowPayload.encode(
             self._connected, self._power, self._light, self._heartbeat)
-        self._shadow.shadowUpdate(d, None, 5)
+        if self._heartbeat != 0:
+            self._shadow.shadowUpdate(d, None, 5)
     def get(self):
         print("Get")
         self.shadow_update()
-    def put(self, power):
+    def put(self, power=None, heartbeat=None):
         print("Put")
-        self._power = power
+        if power is not None:
+            self._power = power
+        if heartbeat is not None:
+            self._heartbeat = heartbeat
         self.shadow_update()
 
 class MainHandler(tornado.web.RequestHandler):
